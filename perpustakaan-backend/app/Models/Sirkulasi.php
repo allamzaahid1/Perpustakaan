@@ -30,12 +30,12 @@ class Sirkulasi extends Model
 
     public function buku()
     {
-        return $this->belongsTo(Buku::class, 'id_buku', 'id');
+        return $this->belongsTo(Buku::class, 'id_buku');
     }
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'id_user', 'id');
+        return $this->belongsTo(User::class, 'id_user');
     }
 
 

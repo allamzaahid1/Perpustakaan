@@ -1,4 +1,4 @@
-<template>
+  <template>
     <div class="modal-overlay">
       <div class="modal-content">
         <h3>{{ selectedSirkulasi ? "Edit Sirkulasi" : "Tambah Sirkulasi" }}</h3>
@@ -17,28 +17,18 @@
           </div>
           <div class="form-group">
             <label>Tanggal Kembali</label>
-            <input
-              type="date"
-              v-model="sirkulasi.tgl_kembali"
-              class="form-control"
-              :required="sirkulasi.status === 'kembali'"
-            />
+            <input type="date" v-model="sirkulasi.tgl_kembali" class="form-control" required />
           </div>
           <div class="form-group">
             <label>Status</label>
             <select v-model="sirkulasi.status" class="form-control" required>
-              <option value="dipinjam">pinjam</option>
+              <option value="dipinjam">dipinjam</option>
               <option value="kembali">kembali</option>
             </select>
           </div>
           <div class="form-group" v-if="sirkulasi.status === 'kembali'">
             <label>Tanggal Pengembalian</label>
-            <input
-              type="date"
-              v-model="sirkulasi.tgl_pengembalian"
-              class="form-control"
-              required
-            />
+            <input type="date" v-model="sirkulasi.tgl_pengembalian" class="form-control" required />
           </div>
           <div class="form-group mt-4">
             <button type="submit" class="btn btn-primary btn-submit">Simpan</button>
@@ -55,10 +45,10 @@
       </div>
     </div>
   </template>
-  
+
   <script>
   import axios from "axios";
-  
+
   export default {
     name: "SirkulasiForm",
     props: ["selectedSirkulasi"],
@@ -72,7 +62,6 @@
           tgl_pengembalian: "",
           status: "",
         },
-        isLoading: false,
       };
     },
     created() {
@@ -90,14 +79,13 @@
       },
       async submitForm() {
         try {
-          // Hapus nilai tanggal yang tidak relevan
+          // Hapus nilai tgl_pengembalian jika status 'dipinjam'
           if (this.sirkulasi.status === "dipinjam") {
-            this.sirkulasi.tgl_kembali = null;
-            this.sirkulasi.tgl_pengembalian = null;
+            delete this.sirkulasi.tgl_pengembalian; // Menghapus field secara eksplisit
           }
-  
+
           const axiosInstance = this.getAxiosInstance();
-  
+
           if (this.selectedSirkulasi) {
             await axiosInstance.put(`/sirkulasi/${this.sirkulasi.id}`, this.sirkulasi);
             alert("Data berhasil diperbarui");
@@ -105,7 +93,7 @@
             await axiosInstance.post("/sirkulasi", this.sirkulasi);
             alert("Data berhasil ditambahkan");
           }
-  
+
           this.$emit("close");
         } catch (error) {
           console.error("Error:", error.response ? error.response.data : error.message);
@@ -115,7 +103,8 @@
     },
   };
   </script>
-  
+
+    
   <style scoped>
   .modal-overlay {
     position: fixed;
